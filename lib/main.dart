@@ -15,85 +15,13 @@ class MistriSebaApp extends StatelessWidget {
       theme: ThemeData(
         useMaterial3: true,
         colorSchemeSeed: const Color(0xFF082B59),
+        scaffoldBackgroundColor: const Color(0xFFF5F8FC),
         fontFamily: 'sans',
       ),
-      home: const SplashScreen(),
+      home: const RoleSelectionScreen(),
     );
   }
 }
-
-// ================= SPLASH SCREEN =================
-
-class SplashScreen extends StatefulWidget {
-  const SplashScreen({super.key});
-
-  @override
-  State<SplashScreen> createState() => _SplashScreenState();
-}
-
-class _SplashScreenState extends State<SplashScreen> {
-  @override
-  void initState() {
-    super.initState();
-
-    Future.delayed(const Duration(seconds: 2), () {
-      if (mounted) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (_) => const RoleSelectionScreen(),
-          ),
-        );
-      }
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFF082B59),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              width: 110,
-              height: 110,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(28),
-              ),
-              child: const Icon(
-                Icons.handyman,
-                size: 65,
-                color: Color(0xFF082B59),
-              ),
-            ),
-            const SizedBox(height: 25),
-            const Text(
-              'মিস্ত্রি সেবা',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 32,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 8),
-            const Text(
-              'মিস্ত্রি আর বাসা — একসাথে',
-              style: TextStyle(
-                color: Colors.white70,
-                fontSize: 16,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-// ================= ROLE SELECTION =================
 
 class RoleSelectionScreen extends StatelessWidget {
   const RoleSelectionScreen({super.key});
@@ -110,161 +38,304 @@ class RoleSelectionScreen extends StatelessWidget {
         backgroundColor: const Color(0xFF082B59),
         foregroundColor: Colors.white,
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            const SizedBox(height: 20),
+            const Icon(
+              Icons.home_repair_service_rounded,
+              size: 85,
+              color: Color(0xFF082B59),
+            ),
             const SizedBox(height: 15),
             const Text(
-              'আপনি কী করতে চান?',
+              'মিস্ত্রি সেবা বাংলাদেশ',
               style: TextStyle(
-                fontSize: 27,
+                fontSize: 26,
                 fontWeight: FontWeight.bold,
+                color: Color(0xFF082B59),
               ),
             ),
             const SizedBox(height: 8),
             const Text(
-              'আপনার প্রয়োজন অনুযায়ী একটি অপশন নির্বাচন করুন',
+              'আপনার প্রয়োজনের কাজের লোক খুঁজুন',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 16, color: Colors.black54),
+            ),
+            const SizedBox(height: 30),
+
+            _roleButton(
+              context,
+              'আমি কাজ করাইতে চাই',
+              Icons.home_work_rounded,
+              () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const JobCategoryScreen(),
+                  ),
+                );
+              },
+            ),
+
+            _roleButton(
+              context,
+              'আমি কাজ করতে চাই',
+              Icons.engineering_rounded,
+              () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const WorkerCategoryScreen(),
+                  ),
+                );
+              },
+            ),
+
+            _roleButton(
+              context,
+              'আমি ইঞ্জিনিয়ার',
+              Icons.architecture_rounded,
+              () {
+                _showMessage(context, 'ইঞ্জিনিয়ার প্রোফাইল খুব শিগগির যোগ হবে।');
+              },
+            ),
+
+            _roleButton(
+              context,
+              'আমি ঠিকাদার',
+              Icons.business_center_rounded,
+              () {
+                _showMessage(context, 'ঠিকাদার প্রোফাইল খুব শিগগির যোগ হবে।');
+              },
+            ),
+
+            const SizedBox(height: 20),
+            const Text(
+              'মিস্ত্রি • শ্রমিক • ঠিকাদার • ইঞ্জিনিয়ার',
+              textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 15,
-                color: Colors.grey,
+                color: Colors.black54,
+                fontWeight: FontWeight.w500,
               ),
-            ),
-            const SizedBox(height: 25),
-
-            RoleCard(
-              icon: Icons.home_repair_service,
-              title: 'আমি কাজ করাইতে চাই',
-              subtitle: 'বাসা বা প্রতিষ্ঠানের কাজের জন্য মিস্ত্রি খুঁজুন',
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => const CustomerScreen(),
-                  ),
-                );
-              },
-            ),
-
-            RoleCard(
-              icon: Icons.engineering,
-              title: 'আমি কাজ করতে চাই',
-              subtitle: 'মিস্ত্রি, শ্রমিক বা হেল্পার হিসেবে কাজ খুঁজুন',
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => const CategoryScreen(),
-                  ),
-                );
-              },
-            ),
-
-            RoleCard(
-              icon: Icons.architecture,
-              title: 'আমি ইঞ্জিনিয়ার',
-              subtitle: 'ইঞ্জিনিয়ার হিসেবে কাজের সুযোগ খুঁজুন',
-              onTap: () {},
-            ),
-
-            RoleCard(
-              icon: Icons.business,
-              title: 'আমি ঠিকাদার',
-              subtitle: 'কাজ নিন এবং মিস্ত্রি/শ্রমিক পরিচালনা করুন',
-              onTap: () {},
             ),
           ],
         ),
       ),
     );
   }
-}
 
-// ================= ROLE CARD =================
-
-class RoleCard extends StatelessWidget {
-  final IconData icon;
-  final String title;
-  final String subtitle;
-  final VoidCallback onTap;
-
-  const RoleCard({
-    super.key,
-    required this.icon,
-    required this.title,
-    required this.subtitle,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
+  Widget _roleButton(
+    BuildContext context,
+    String title,
+    IconData icon,
+    VoidCallback onTap,
+  ) {
+    return Container(
       margin: const EdgeInsets.only(bottom: 14),
-      elevation: 3,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(18),
-      ),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(18),
-        onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.all(18),
-          child: Row(
-            children: [
-              Container(
-                width: 58,
-                height: 58,
-                decoration: BoxDecoration(
-                  color: const Color(0xFFE8F0FA),
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                child: Icon(
-                  icon,
-                  size: 32,
-                  color: const Color(0xFF082B59),
-                ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 5),
-                    Text(
-                      subtitle,
-                      style: const TextStyle(
-                        fontSize: 13,
-                        color: Colors.grey,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const Icon(
-                Icons.arrow_forward_ios,
-                size: 18,
-                color: Colors.grey,
-              ),
-            ],
+      width: double.infinity,
+      child: ElevatedButton.icon(
+        onPressed: onTap,
+        icon: Icon(icon, size: 28),
+        label: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 17),
+          child: Text(
+            title,
+            style: const TextStyle(
+              fontSize: 17,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.white,
+          foregroundColor: const Color(0xFF082B59),
+          elevation: 3,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
           ),
         ),
       ),
     );
   }
+
+  void _showMessage(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message)),
+    );
+  }
 }
 
-// ================= CUSTOMER SCREEN =================
+class JobCategoryScreen extends StatelessWidget {
+  const JobCategoryScreen({super.key});
 
-class CustomerScreen extends StatelessWidget {
-  const CustomerScreen({super.key});
+  final List<Map<String, dynamic>> categories = const [
+    {'name': 'রাজমিস্ত্রি', 'icon': Icons.foundation_rounded},
+    {'name': 'রড মিস্ত্রি', 'icon': Icons.construction_rounded},
+    {'name': 'কাঠমিস্ত্রি', 'icon': Icons.carpenter_rounded},
+    {'name': 'স্যানিটারি মিস্ত্রি', 'icon': Icons.plumbing_rounded},
+    {'name': 'টাইলস মিস্ত্রি', 'icon': Icons.grid_view_rounded},
+    {'name': 'ইলেকট্রিশিয়ান', 'icon': Icons.electrical_services_rounded},
+    {'name': 'পেইন্টার', 'icon': Icons.format_paint_rounded},
+    {'name': 'ওয়েল্ডিং মিস্ত্রি', 'icon': Icons.build_rounded},
+    {'name': 'গ্লাস মিস্ত্রি', 'icon': Icons.window_rounded},
+    {'name': 'অ্যালুমিনিয়াম মিস্ত্রি', 'icon': Icons.view_module_rounded},
+    {'name': 'এসি/ফ্রিজ মিস্ত্রি', 'icon': Icons.ac_unit_rounded},
+    {'name': 'প্লাস্টার মিস্ত্রি', 'icon': Icons.handyman_rounded},
+    {'name': 'ছাদ/টিন মিস্ত্রি', 'icon': Icons.roofing_rounded},
+    {'name': 'মেকানিক', 'icon': Icons.car_repair_rounded},
+    {'name': 'হেল্পার', 'icon': Icons.groups_rounded},
+    {'name': 'ছোট ঠিকাদার', 'icon': Icons.business_rounded},
+    {'name': 'আদার্স / অন্যান্য', 'icon': Icons.more_horiz_rounded},
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('কাজের লোক নির্বাচন করুন'),
+        backgroundColor: const Color(0xFF082B59),
+        foregroundColor: Colors.white,
+      ),
+      body: GridView.builder(
+        padding: const EdgeInsets.all(16),
+        itemCount: categories.length,
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          crossAxisSpacing: 12,
+          mainAxisSpacing: 12,
+          childAspectRatio: 1.05,
+        ),
+        itemBuilder: (context, index) {
+          final category = categories[index];
+
+          return InkWell(
+            borderRadius: BorderRadius.circular(18),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => JobPostScreen(
+                    category: category['name'] as String,
+                  ),
+                ),
+              );
+            },
+            child: Card(
+              elevation: 3,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(18),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    category['icon'] as IconData,
+                    size: 45,
+                    color: const Color(0xFF082B59),
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    category['name'] as String,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class WorkerCategoryScreen extends StatelessWidget {
+  const WorkerCategoryScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('আমি যে কাজ করি'),
+        backgroundColor: const Color(0xFF082B59),
+        foregroundColor: Colors.white,
+      ),
+      body: ListView(
+        padding: const EdgeInsets.all(16),
+        children: const [
+          WorkerOption(title: 'রাজমিস্ত্রি'),
+          WorkerOption(title: 'রড মিস্ত্রি'),
+          WorkerOption(title: 'কাঠমিস্ত্রি'),
+          WorkerOption(title: 'স্যানিটারি মিস্ত্রি'),
+          WorkerOption(title: 'টাইলস মিস্ত্রি'),
+          WorkerOption(title: 'ইলেকট্রিশিয়ান'),
+          WorkerOption(title: 'পেইন্টার'),
+          WorkerOption(title: 'ওয়েল্ডিং মিস্ত্রি'),
+          WorkerOption(title: 'হেল্পার / মিস্ত্রির সাহায্যকারী'),
+          WorkerOption(title: 'ছোট ঠিকাদার'),
+          WorkerOption(title: 'আদার্স / অন্যান্য'),
+        ],
+      ),
+    );
+  }
+}
+
+class WorkerOption extends StatelessWidget {
+  final String title;
+
+  const WorkerOption({super.key, required this.title});
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      margin: const EdgeInsets.only(bottom: 10),
+      child: ListTile(
+        leading: const CircleAvatar(
+          backgroundColor: Color(0xFFE6EEF8),
+          child: Icon(
+            Icons.engineering_rounded,
+            color: Color(0xFF082B59),
+          ),
+        ),
+        title: Text(
+          title,
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
+        trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 18),
+        onTap: () {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('$title নির্বাচন করা হয়েছে')),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class JobPostScreen extends StatefulWidget {
+  final String category;
+
+  const JobPostScreen({super.key, required this.category});
+
+  @override
+  State<JobPostScreen> createState() => _JobPostScreenState();
+}
+
+class _JobPostScreenState extends State<JobPostScreen> {
+  final locationController = TextEditingController();
+  final detailsController = TextEditingController();
+
+  @override
+  void dispose() {
+    locationController.dispose();
+    detailsController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -274,117 +345,87 @@ class CustomerScreen extends StatelessWidget {
         backgroundColor: const Color(0xFF082B59),
         foregroundColor: Colors.white,
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Icon(
-              Icons.home_work,
-              size: 80,
-              color: Color(0xFF082B59),
-            ),
-            const SizedBox(height: 20),
-            const Text(
-              'আপনার কাজের বিস্তারিত দিন',
-              style: TextStyle(
-                fontSize: 24,
+            Text(
+              widget.category,
+              style: const TextStyle(
+                fontSize: 23,
                 fontWeight: FontWeight.bold,
+                color: Color(0xFF082B59),
               ),
             ),
-            const SizedBox(height: 25),
+            const SizedBox(height: 20),
             TextField(
+              controller: locationController,
               decoration: InputDecoration(
-                labelText: 'কাজের বিবরণ',
+                labelText: 'কাজের জায়গা',
+                hintText: 'এলাকা / জেলা লিখুন',
+                prefixIcon: const Icon(Icons.location_on_rounded),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(14),
                 ),
               ),
-              maxLines: 4,
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: detailsController,
+              maxLines: 5,
+              decoration: InputDecoration(
+                labelText: 'কাজের বিস্তারিত',
+                hintText: 'কী কাজ করাতে চান লিখুন',
+                prefixIcon: const Icon(Icons.description_rounded),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(14),
+                ),
+              ),
             ),
             const SizedBox(height: 20),
+            const Text(
+              'অগ্রিম / পেমেন্ট ব্যবস্থা পরে যুক্ত করা হবে।',
+              style: TextStyle(color: Colors.black54),
+            ),
+            const SizedBox(height: 25),
             SizedBox(
               width: double.infinity,
-              height: 52,
-              child: ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF082B59),
-                  foregroundColor: Colors.white,
-                ),
-                child: const Text(
-                  'কাজের পোস্ট দিন',
-                  style: TextStyle(fontSize: 17),
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  if (locationController.text.trim().isEmpty ||
+                      detailsController.text.trim().isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('কাজের জায়গা ও বিস্তারিত লিখুন'),
+                      ),
+                    );
+                    return;
+                  }
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text(
+                        'কাজের পোস্ট তৈরি হয়েছে। কাছাকাছি মিস্ত্রি ও ঠিকাদারদের জানানো হবে।',
+                      ),
+                    ),
+                  );
+                },
+                icon: const Icon(Icons.send_rounded),
+                label: const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 15),
+                  child: Text(
+                    'কাজের পোস্ট দিন',
+                    style: TextStyle(
+                      fontSize: 17,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
               ),
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-// ================= CATEGORY SCREEN =================
-
-class CategoryScreen extends StatelessWidget {
-  const CategoryScreen({super.key});
-
-  final List<String> categories = const [
-    'রাজমিস্ত্রি',
-    'রড মিস্ত্রি',
-    'কাঠমিস্ত্রি',
-    'স্যানিটারি মিস্ত্রি',
-    'টাইলস মিস্ত্রি',
-    'ইলেকট্রিশিয়ান',
-    'রং মিস্ত্রি',
-    'গ্লাস মিস্ত্রি',
-    'ওয়েল্ডিং মিস্ত্রি',
-    'এসি মিস্ত্রি',
-    'প্লাম্বার',
-    'পাইপ মিস্ত্রি',
-    'অ্যালুমিনিয়াম মিস্ত্রি',
-    'ছাদ/টিন মিস্ত্রি',
-    'মেকানিক',
-    'হেল্পার / সাহায্যকারী',
-    'আদার্স',
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('কাজের ধরন নির্বাচন করুন'),
-        backgroundColor: const Color(0xFF082B59),
-        foregroundColor: Colors.white,
-      ),
-      body: ListView.builder(
-        padding: const EdgeInsets.all(16),
-        itemCount: categories.length,
-        itemBuilder: (context, index) {
-          return Card(
-            margin: const EdgeInsets.only(bottom: 10),
-            child: ListTile(
-              leading: CircleAvatar(
-                backgroundColor: const Color(0xFFE8F0FA),
-                child: Text(
-                  '${index + 1}',
-                  style: const TextStyle(
-                    color: Color(0xFF082B59),
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              title: Text(
-                categories[index],
-                style: const TextStyle(
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-              onTap: () {},
-            ),
-          );
-        },
       ),
     );
   }
